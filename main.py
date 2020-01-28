@@ -44,6 +44,7 @@ animation_y = 550
 on_menu_angle = 0
 menu_spider_rotate = 0
 settings_tab = 0
+controll_is_set = 0
 # full screen
 DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.time.delay(3000)
@@ -75,11 +76,11 @@ down_key_text = font.render("Down: " + pygame.key.name(newdata["controlls"]["dow
 left_key_text = font.render("Left: " + pygame.key.name(newdata["controlls"]["left"]).upper(), True, (0, 0, 0))
 right_key_text = font.render("Right: " + pygame.key.name(newdata["controlls"]["right"]).upper(), True, (0, 0, 0))
 
-press_key_to_set = font.render("Press a Key!", True, (0, 0, 0))
+press_key_to_set = font.render("Press a Key to set!", True, (0, 0, 0))
 # game over
 overfont = pygame.font.SysFont("comicsansms", 80)
 game_over_text = overfont.render("Game Over! You Dead.", True, (255, 255, 255))
-press_space_text = font.render("Press SPACE to start a new game!", True, (255, 255, 255))
+press_space_text = font.render("Press " + pygame.key.name(newdata["controlls"]["space"]).upper() + " to start a new game!", True, (255, 255, 255))
 # descriptions
 desc_font = pygame.font.SysFont("comicsansms", 15)
 hearth_desc = desc_font.render("You get hp from meat", True, (66, 245, 170))
@@ -124,7 +125,7 @@ poti_red_onImg = pygame.image.load('./bin/images/potion_red_ability_ready.png')
 poti_yellow_onImg = pygame.image.load('./bin/images/potion_yellow_ability_ready.png')
 # configset
 def set_config(newdata):
-    with open('data.txt', 'w') as outfile:
+    with open('./bin/config.json', 'w') as outfile:
         jsdump(newdata, outfile)
 
 # rotation
@@ -159,6 +160,16 @@ def character1(x, y, vertical, horisontal, blittedChar):
     return(character1Img)
 
 while go == True:
+    # setup
+    ab1_key_text = font.render("Ability1: " + pygame.key.name(newdata["controlls"]["ab1"]).upper(), True, (0, 0, 0))
+    ab2_key_text =  font.render("Ability2: " + pygame.key.name(newdata["controlls"]["ab2"]).upper(), True, (0, 0, 0))
+    space_key_text = font.render("Function: " + pygame.key.name(newdata["controlls"]["space"]).upper(), True, (0, 0, 0))
+    up_key_text = font.render("Up: " + pygame.key.name(newdata["controlls"]["up"]).upper(), True, (0, 0, 0))
+    down_key_text = font.render("Down: " + pygame.key.name(newdata["controlls"]["down"]).upper(), True, (0, 0, 0))
+    left_key_text = font.render("Left: " + pygame.key.name(newdata["controlls"]["left"]).upper(), True, (0, 0, 0))
+    right_key_text = font.render("Right: " + pygame.key.name(newdata["controlls"]["right"]).upper(), True, (0, 0, 0))
+
+    press_space_text = font.render("Press " + pygame.key.name(newdata["controlls"]["space"]).upper() + " to start a new game!", True, (255, 255, 255))
     # loading screen
     if loading == True:
         logo = True
@@ -308,13 +319,34 @@ while go == True:
 
             back = pygame.draw.rect(screen, (220, 220, 220), (550, 550, 175, 30))
 
-            screen.blit(ab1_key_text, (485, 150))
-            screen.blit(ab2_key_text, (485, 200))
-            screen.blit(space_key_text, (485, 250))
-            screen.blit(up_key_text, (485, 300))
-            screen.blit(down_key_text, (485, 350))
-            screen.blit(left_key_text, (485, 400))
-            screen.blit(right_key_text, (485, 450))
+            if controll_is_set == 1:
+                screen.blit(press_key_to_set, (485, 150))
+            else:
+                screen.blit(ab1_key_text, (485, 150))
+            if controll_is_set == 2:
+                screen.blit(press_key_to_set, (485, 200))
+            else:
+                screen.blit(ab2_key_text, (485, 200))
+            if controll_is_set == 3:
+                screen.blit(press_key_to_set, (485, 250))
+            else:
+                screen.blit(space_key_text, (485, 250))
+            if controll_is_set == 4:
+                screen.blit(press_key_to_set, (485, 300))
+            else:
+                screen.blit(up_key_text, (485, 300))
+            if controll_is_set == 5:
+                screen.blit(press_key_to_set, (485, 350))
+            else:
+                screen.blit(down_key_text, (485, 350))
+            if controll_is_set == 6:
+                screen.blit(press_key_to_set, (485, 400))
+            else:
+                screen.blit(left_key_text, (485, 400))
+            if controll_is_set == 7:
+                screen.blit(press_key_to_set, (485, 450))
+            else:
+                screen.blit(right_key_text, (485, 450))
 
             screen.blit(back_text, (615, 550))
 
@@ -323,10 +355,78 @@ while go == True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         settings_tab = 0
+                        controll_is_set = 0
 
-                if event.type == pygame.MOUSEBUTTONUP:
-                    if back.collidepoint(pygame.mouse.get_pos()):
-                        settings_tab = 0
+                if controll_is_set == 1:
+                    if event.type == pygame.KEYDOWN:
+                        newdata["controlls"]["ab1"] = event.key
+                        controll_is_set = 0
+                elif controll_is_set == 2:
+                    if event.type == pygame.KEYDOWN:
+                        newdata["controlls"]["ab2"] = event.key
+                        controll_is_set = 0
+                elif controll_is_set == 3:
+                    if event.type == pygame.KEYDOWN:
+                        newdata["controlls"]["space"] = event.key
+                        controll_is_set = 0
+                elif controll_is_set == 4:
+                    if event.type == pygame.KEYDOWN:
+                        newdata["controlls"]["up"] = event.key
+                        controll_is_set = 0
+                elif controll_is_set == 5:
+                    if event.type == pygame.KEYDOWN:
+                        newdata["controlls"]["down"] = event.key
+                        controll_is_set = 0
+                elif controll_is_set == 6:
+                    if event.type == pygame.KEYDOWN:
+                        newdata["controlls"]["left"] = event.key
+                        controll_is_set = 0
+                elif controll_is_set == 7:
+                    if event.type == pygame.KEYDOWN:
+                        newdata["controlls"]["right"] = event.key
+                        controll_is_set = 0
+
+                # else:
+                if True:
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        if back.collidepoint(pygame.mouse.get_pos()):
+                            settings_tab = 0
+                            controll_is_set = 0
+                        elif ab1_key_set.collidepoint(pygame.mouse.get_pos()):
+                            if controll_is_set == 1:
+                                controll_is_set = 0
+                            else:
+                                controll_is_set = 1
+                        elif ab2_key_set.collidepoint(pygame.mouse.get_pos()):
+                            if controll_is_set == 2:
+                                controll_is_set = 0
+                            else:
+                                controll_is_set = 2
+                        elif space_key_set.collidepoint(pygame.mouse.get_pos()):
+                            if controll_is_set == 3:
+                                controll_is_set = 0
+                            else:
+                                controll_is_set = 3
+                        elif up_key_set.collidepoint(pygame.mouse.get_pos()):
+                            if controll_is_set == 4:
+                                controll_is_set = 0
+                            else:
+                                controll_is_set = 4
+                        elif down_key_set.collidepoint(pygame.mouse.get_pos()):
+                            if controll_is_set == 5:
+                                controll_is_set = 0
+                            else:
+                                controll_is_set = 5
+                        elif left_key_set.collidepoint(pygame.mouse.get_pos()):
+                            if controll_is_set == 6:
+                                controll_is_set = 0
+                            else:
+                                controll_is_set = 6
+                        elif right_key_set.collidepoint(pygame.mouse.get_pos()):
+                            if controll_is_set == 7:
+                                controll_is_set = 0
+                            else:
+                                controll_is_set = 7
 
         # sound tab
         elif settings_tab == 2:
@@ -366,28 +466,28 @@ while go == True:
             if alive:
                 # controlling
                 pressed = pygame.key.get_pressed()
-                if pressed[pygame.K_w] or pressed[pygame.K_s] or pressed[pygame.K_a] or pressed[pygame.K_d]:
+                if pressed[newdata["controlls"]["up"]] or pressed[newdata["controlls"]["down"]] or pressed[newdata["controlls"]["left"]] or pressed[newdata["controlls"]["right"]]:
                     x_right = 0
                     y_up = 0
-                if pressed[pygame.K_w]:
+                if pressed[newdata["controlls"]["up"]]:
                     y -= mov_speed
                     y_up = 1
-                elif pressed[pygame.K_s]:
+                elif pressed[newdata["controlls"]["down"]]:
                     y += mov_speed
                     y_up = -1
-                if pressed[pygame.K_a]:
+                if pressed[newdata["controlls"]["left"]]:
                     x -= mov_speed
                     x_right = -1
-                elif pressed[pygame.K_d]:
+                elif pressed[newdata["controlls"]["right"]]:
                     x += mov_speed
                     x_right = 1
 
                 if space == 0:
-                    if pressed[pygame.K_q]:
+                    if pressed[newdata["controlls"]["ab1"]]:
                         space = 1
 
                 elif space == 1:
-                    if pressed[pygame.K_q] == False:
+                    if pressed[newdata["controlls"]["ab1"]] == False:
                         space = 2
 
                 #tp if it runs out of the map
@@ -629,7 +729,7 @@ while go == True:
                 screen.blit(press_space_text, (500, 300))
 
                 pressed = pygame.key.get_pressed()
-                if pressed[pygame.K_SPACE]:
+                if pressed[newdata["controlls"]["space"]]:
                     x = 480
                     y = 270
                     x_2 = random.randint(50, 1100)
