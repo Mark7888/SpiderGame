@@ -1,0 +1,7 @@
+cyan = creates a trap
+green = xp
+orange = resistance
+pink = stun enemies in a small range
+purple = strenght (+dmg on autoattacks)
+red = hp
+yellow = speed
